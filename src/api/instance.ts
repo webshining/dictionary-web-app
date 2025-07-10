@@ -5,7 +5,7 @@ const getCookie = (name: string) => {
 	return cookies ? cookies.split("=")[1] : null;
 };
 export const host = axios.create({
-	baseURL: process.env.API_URL,
+	baseURL: process.env.REACT_APP_API_URL,
 	withCredentials: true,
 });
 host.interceptors.request.use((config) => {
