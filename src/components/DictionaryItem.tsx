@@ -17,7 +17,7 @@ const DictionaryItem = ({ dictionary }: { dictionary: Dictionary }) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	const deleteDictionary = () => {
-		ref.current?.classList.add("animate-disappearance");
+		ref.current?.classList.add("animate-disappearance", "remove");
 		mutation.mutate();
 
 		setTimeout(() => {
