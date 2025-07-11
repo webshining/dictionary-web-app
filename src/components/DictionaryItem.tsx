@@ -1,35 +1,43 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { MdDeleteOutline } from "react-icons/md";
-import { NavLink } from "react-router";
 import { host } from "../api";
+import Button from "../elements/Button";
+import { useRedirect } from "../services";
 import { Dictionary } from "../types/dictionary";
 
-const DictionaryItem = (dictionary: Dictionary) => {
+const DictionaryItem = ({ dictionary }: { dictionary: Dictionary }) => {
+	const redirect = useRedirect();
 	const queryClient = useQueryClient();
 	const mutation = useMutation({
-		mutationFn: async ({ id }: { id: number }) => {
-			await host.delete(`/dictionaries/${id}`);
+		mutationFn: async () => {
+			await host.delete(`/dictionaries/${dictionary.id}`);
 		},
-		onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dictionaries"] }),
 	});
 	const ref = useRef<HTMLDivElement>(null);
 
 	const deleteDictionary = () => {
-		ref.current?.classList.add("disappearance");
+		ref.current?.classList.add("animate-disappearance");
+		mutation.mutate();
 
 		setTimeout(() => {
-			mutation.mutate({ id: dictionary.id });
+			queryClient.invalidateQueries({ queryKey: ["dictionaries"] });
 		}, 200);
 	};
 	return (
-		<div key={dictionary.id} className="dictionary__content" ref={ref}>
-			<NavLink className="dictionary__name" to={"/dictionaries/" + dictionary.id} end>
+		<div
+			className="dictionary__content w-full h-[65px] flex justify-between items-center gap-[10px] bg-[var(--tg-theme-secondary-bg-color)] rounded-[10px] animate-appearance"
+			ref={ref}
+		>
+			<div
+				className="cursor-pointer flex-1 h-full flex items-center pl-[10px]"
+				onClick={() => redirect(`/dictionaries/${dictionary.id}`)}
+			>
 				{dictionary.name}
-			</NavLink>
-			<div className="dictionary__button">
-				<MdDeleteOutline onClick={deleteDictionary} />
 			</div>
+			<Button className="pr-[10px]">
+				<MdDeleteOutline onClick={deleteDictionary} />
+			</Button>
 		</div>
 	);
 };

@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { host } from "../api";
-import DictionaryCreate from "../components/DictionariesCreate";
+import DictionaryForm from "../components/DictionaryForm";
 import DictionaryItem from "../components/DictionaryItem";
+import Items from "../elements/Items";
 import { Dictionary } from "../types/dictionary";
 
 const Dictionaries = () => {
@@ -14,14 +15,20 @@ const Dictionaries = () => {
 	useEffect(() => {
 		if (query.data && "dictionaries" in query.data) setDictionaries(query.data.dictionaries);
 	}, [query.data]);
+
 	return (
-		<div className="dictionaries">
-			<div className="dictionaries__content">
-				{dictionaries.map((dictionary: Dictionary) => (
-					<DictionaryItem key={dictionary.id} {...dictionary} />
-				))}
+		<div className="w-full h-full flex flex-col">
+			{/* <div className="w-full flex-1 px-[10px]"> */}
+			<div className="w-full flex-1 px-[10px]">
+				<Items className="p-10px">
+					{dictionaries.map((dictionary: Dictionary) => (
+						<DictionaryItem key={dictionary.id} dictionary={dictionary} />
+					))}
+				</Items>
 			</div>
-			<DictionaryCreate />
+			<div className="w-full p-[10px] animate-appearance">
+				<DictionaryForm />
+			</div>
 		</div>
 	);
 };

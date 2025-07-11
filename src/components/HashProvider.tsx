@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { host } from "../api";
 
-const HashProvider = ({ children }: { children: React.ReactNode }) => {
+const HashProvider = () => {
 	const navigate = useNavigate();
 	const [authorized, setAuthorized] = useState<boolean>(false);
 	useEffect(() => {
@@ -20,7 +20,7 @@ const HashProvider = ({ children }: { children: React.ReactNode }) => {
 			setAuthorized(true);
 		}
 	}, []);
-	return authorized ? <>{children}</> : <>Дядя гуляй</>;
+	return authorized ? <Outlet /> : null;
 };
 
 export default HashProvider;
