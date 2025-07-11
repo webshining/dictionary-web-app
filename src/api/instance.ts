@@ -12,6 +12,7 @@ host.interceptors.request.use((config) => {
 	const token = getCookie("csrftoken");
 	if (token) {
 		config.headers["X-CSRFToken"] = token;
+		config.headers["ngrok-skip-browser-warning"] = "69420";
 	}
 	return config;
 });
