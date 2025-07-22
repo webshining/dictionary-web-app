@@ -30,9 +30,6 @@ const WordForm = () => {
 				name="word"
 				value={word}
 				onChange={(e) => setWord(e.target.value)}
-				autoComplete="off"
-				autoCorrect="off"
-				autoCapitalize="off"
 				spellCheck="false"
 			/>
 		</Form>

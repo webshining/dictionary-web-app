@@ -8,7 +8,10 @@ type DivProps = React.HTMLAttributes<HTMLDivElement> & {
 const Items = ({ children, className, ...props }: DivProps) => {
 	return (
 		<div
-			className={"w-full overflow-y-auto gap-[15px] text-[18px] grid grid-rows-[repeat(auto-fill,65px)] " + (className ? className : "")}
+			className={
+				"w-full h-full overflow-y-auto gap-[15px] text-[18px] grid grid-rows-[repeat(auto-fill,65px)] " +
+				(className ? className : "")
+			}
 			{...props}
 		>
 			{children}
