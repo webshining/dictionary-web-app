@@ -18,15 +18,14 @@ const Dictionaries = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col">
-			{/* <div className="w-full flex-1 px-[10px]"> */}
-			<div className="w-full flex-1 px-[10px]">
+			<div className="w-full flex-1 px-[10px] overflow-y-auto">
 				<Items className="p-10px">
 					{dictionaries.map((dictionary: Dictionary) => (
 						<DictionaryItem key={dictionary.id} dictionary={dictionary} />
 					))}
 				</Items>
 			</div>
-			<div className="w-full p-[10px] animate-appearance">
+			<div className="w-full p-[10px]">
 				<DictionaryForm />
 			</div>
 		</div>

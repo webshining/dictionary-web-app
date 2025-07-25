@@ -1,12 +1,24 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormEvent, useState } from "react";
+import InputBase from "@mui/material/InputBase";
+import { styled } from "@mui/material/styles";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { FormEvent, useEffect, useState } from "react";
 import { host } from "../api";
 import Form from "../elements/Form";
+import { Language } from "../types/language";
 
 const DictionaryForm = () => {
 	const [name, setName] = useState<string>("");
 	const [source, setSource] = useState<string>("ru");
 	const [target, setTarget] = useState<string>("en");
+	const [languages, setLanguages] = useState<Language[]>([]);
+
+	const query = useQuery({
+		queryKey: ["languages"],
+		queryFn: async () => (await host.get("/languages")).data,
+	});
+	useEffect(() => {
+		if (query.data && "languages" in query.data) setLanguages(query.data.languages);
+	}, [query.data]);
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation({
@@ -22,9 +34,19 @@ const DictionaryForm = () => {
 		setName("");
 		mutation.mutate({ name, source_lang: source, target_lang: target });
 	};
+
+	const StyledInput = styled(InputBase)(({ theme }) => ({
+		width: "100%",
+		fontSize: "100%",
+		color: "var(--tg-theme-text-color)",
+		"& .MuiInputBase-input": {
+			color: "var(--tg-theme-text-color)",
+			fontSize: "100%",
+		},
+	}));
 	return (
-		<Form onSubmit={formSubmit}>
-			<input
+		<Form className="animate-appearance" onSubmit={formSubmit}>
+			<InputBase
 				className="w-full"
 				type="text"
 				placeholder="Name"
@@ -35,15 +57,8 @@ const DictionaryForm = () => {
 				autoCorrect="off"
 				autoCapitalize="off"
 				spellCheck="false"
+				sx={{ color: "unset" }}
 			/>
-			<select name="source_lang" value={source} onChange={(e) => setSource(e.target.value)}>
-				<option value="en">En</option>
-				<option value="ru">Ru</option>
-			</select>
-			<select name="target_lang" value={target} onChange={(e) => setTarget(e.target.value)}>
-				<option value="en">En</option>
-				<option value="ru">Ru</option>
-			</select>
 		</Form>
 	);
 };

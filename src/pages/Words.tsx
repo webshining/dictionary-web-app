@@ -26,17 +26,23 @@ const Words = () => {
 	return (
 		<div className="w-full h-full flex flex-col gap-[10px]">
 			<div className="px-[10px] flex gap-[10px] items-center animate-appearance">
-				{dictionary && <DictionaryUpdateForm dictionary={dictionary} />}
-				<Button onClick={() => redirect("/dictionaries")}>
-					<IoMdArrowRoundBack />
-				</Button>
+				{dictionary && (
+					<>
+						<DictionaryUpdateForm dictionary={dictionary} />
+						<Button onClick={() => redirect("/dictionaries")}>
+							<IoMdArrowRoundBack />
+						</Button>
+					</>
+				)}
 			</div>
 			<div className="w-full flex-1 px-[10px] overflow-y-auto">
-				<Items className="h-full">
-					{dictionary?.words.map((word) => (
-						<WordItem key={word.id} word={word} id={word.dictionary} />
-					))}
-				</Items>
+				{dictionary && (
+					<Items className="h-full">
+						{dictionary?.words.map((word) => (
+							<WordItem key={word.id} word={word} id={word.dictionary} />
+						))}
+					</Items>
+				)}
 			</div>
 			<div className="w-full px-[10px] animate-appearance">
 				<WordForm />

@@ -1,3 +1,4 @@
+import InputBase from "@mui/material/InputBase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FormEvent, useState } from "react";
 import { useParams } from "react-router";
@@ -23,14 +24,18 @@ const WordForm = () => {
 	};
 	return (
 		<Form onSubmit={formSubmit}>
-			<input
+			<InputBase
 				className="w-full"
 				type="text"
 				placeholder="Word"
 				name="word"
 				value={word}
 				onChange={(e) => setWord(e.target.value)}
+				autoComplete="off"
+				autoCorrect="off"
+				autoCapitalize="off"
 				spellCheck="false"
+				sx={{ color: "unset" }}
 			/>
 		</Form>
 	);
