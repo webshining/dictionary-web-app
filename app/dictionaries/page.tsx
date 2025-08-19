@@ -10,10 +10,10 @@ import { content, form, items } from "./page.css";
 const page = () => {
 	const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
 	useEffect(() => {
-		host.get("/dictionaries").then(({ data }) => {
+		host.get("/dictionaries/").then(({ data }) => {
 			// if dictionaries in data
-			if (data && data.dictionaries) {
-				setDictionaries(data.dictionaries);
+			if (data && data instanceof Array) {
+				setDictionaries(data);
 			}
 		});
 	}, []);

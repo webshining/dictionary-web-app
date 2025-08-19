@@ -1,9 +1,10 @@
 import { globalStyle } from "@vanilla-extract/css";
-import { primaryText, secondaryBackground } from "./vars.css";
+import { primaryBackground, primaryText, secondaryBackground } from "./vars.css";
 
 globalStyle(":root", {
 	vars: {
 		[primaryText]: "var(--tg-theme-text-color)",
+		[primaryBackground]: "var(--tg-theme-bg-color)",
 		[secondaryBackground]: "var(--tg-theme-secondary-bg-color)",
 	},
 });

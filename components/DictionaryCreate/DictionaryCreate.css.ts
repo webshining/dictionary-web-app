@@ -14,5 +14,5 @@ export const form = style({
 });
 
 export const input = style({
-	width: "100%",
+	flexGrow: 1,
 });

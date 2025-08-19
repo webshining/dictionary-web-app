@@ -5,7 +5,7 @@ const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
 	env: {
-		API_URL: "https://api.webshining.space/api",
+		API_URL: "http://localhost:4000/api",
 	},
 	reactStrictMode: false,
 };
