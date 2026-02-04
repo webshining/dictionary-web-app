@@ -1,43 +1,31 @@
-import { globalStyle } from "@vanilla-extract/css";
-import { primaryBackground, primaryText, secondaryBackground } from "./vars.css";
+import { createGlobalStyle } from "styled-components";
 
-globalStyle(":root", {
-	vars: {
-		[primaryText]: "var(--tg-theme-text-color)",
-		[primaryBackground]: "var(--tg-theme-bg-color)",
-		[secondaryBackground]: "var(--tg-theme-secondary-bg-color)",
-	},
-});
+export const GlobalStyle = createGlobalStyle`
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-globalStyle("*", {
-	margin: 0,
-	padding: 0,
-	boxSizing: "border-box",
-	overflow: "hidden",
-	userSelect: "none",
-	scrollbarWidth: "none",
-	fontSize: "inherit",
-});
+    body {
+        width: 100dvw;
+        height: 100dvh;
+        
+        color: ${(props) => props.theme.colors.primary};
+        background: ${(props) => props.theme.colors.background};
+        overflow: hidden;
+    }
 
-globalStyle("input", {
-	color: "unset",
-	backgroundColor: "unset",
-	border: "none",
-	outline: "none",
-	fontFamily: "inherit",
-});
+    *::-webkit-scrollbar {
+        display: none;
+        width: 0;
+    }
 
-globalStyle("a", {
-	textDecoration: "none",
-	color: "inherit",
-});
-
-globalStyle("body", {
-	width: "100dvw",
-	height: "100dvh",
-	color: primaryText,
-});
-
-globalStyle("svg", {
-	fontSize: "1.5rem",
-});
+    button {
+        cursor: pointer;
+        background: none;
+        outline: none;
+        border: none;
+        color: unset;
+    }
+`;

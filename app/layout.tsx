@@ -1,28 +1,20 @@
-import Providers from "@/components/Providers";
-import { Metadata } from "next";
-import { Carlito } from "next/font/google";
+import { Montserrat_Alternates } from "next/font/google";
 import Script from "next/script";
-import "./global.css";
 
-export const metadata: Metadata = {
-	title: "Dictionary",
-};
+import Providers from "@/components/Providers";
 
-const carlito = Carlito({
-	weight: ["400", "700"],
-	subsets: ["latin"],
+const montserrat = Montserrat_Alternates({
+	weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
+	subsets: ["cyrillic", "latin"],
 });
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en">
-			<body className={carlito.className}>
+			<body className={montserrat.className}>
 				<Providers>{children}</Providers>
-				<Script src="https://telegram.org/js/telegram-web-app.js" />
+
+				<Script src="https://telegram.org/js/telegram-web-app.js?59" />
 			</body>
 		</html>
 	);

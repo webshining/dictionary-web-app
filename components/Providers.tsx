@@ -1,33 +1,66 @@
 "use client";
-
-import { host } from "@/lib/axios";
-import { createDictionariesStore, DictionariesStoreContext } from "@/stores/dictionaries";
+import { useServerInsertedHTML } from "next/navigation";
 import { useEffect, useState } from "react";
+import { type DefaultTheme, ServerStyleSheet, StyleSheetManager, ThemeProvider } from "styled-components";
 
-const dictionariesStore = createDictionariesStore();
+import { GlobalStyle } from "@/app/global.css";
+import { init } from "@/lib/api";
+
+const defaultTheme: DefaultTheme = {
+	colors: {
+		primary: "#4A4A4A",
+		accent: "#4A4A4A",
+		background: "#DAEBF6",
+	},
+};
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
-	const [authorized, setAuthorized] = useState<boolean>(false);
+	const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
+	useServerInsertedHTML(() => {
+		const styles = styledComponentsStyleSheet.getStyleElement();
+		styledComponentsStyleSheet.instance.clearTag();
+		return <>{styles}</>;
+	});
+
+	// const [theme, setTheme] = useState<DefaultTheme>(defaultTheme);
+	// useEffect(() => {
+	// 	const waitForTelegram = (): Promise<any> => {
+	// 		return new Promise((resolve) => {
+	// 			const checkTelegram = () => {
+	// 				const w = window as any;
+	// 				if (w.Telegram && w.Telegram.WebApp) {
+	// 					resolve(w.Telegram.WebApp);
+	// 				} else {
+	// 					setTimeout(checkTelegram, 100);
+	// 				}
+	// 			};
+	// 			checkTelegram();
+	// 		});
+	// 	};
+
+	// 	waitForTelegram().then((webapp) => {
+	// 		setTheme({
+	// 			colors: { primary: webapp.themeParams.text_color, accent: webapp.themeParams.accent_text_color },
+	// 		});
+	// 	});
+	// }, []);
 
 	useEffect(() => {
-		if (window.location.hash) {
-			const hash = window.location.hash.slice(1);
-			const params = new URLSearchParams(hash);
-			const tgWebAppData = params.get("tgWebAppData");
-			host.post("/init/", { tgWebAppData }).then(({ data }) => {
-				if (data.message == "Success") {
-					setAuthorized(true);
-				}
-			});
-		} else {
-			setAuthorized(true);
-		}
+		let hash = window.location.hash;
+		if (!hash) return;
+		hash = hash.slice(1);
+		const data = new URLSearchParams(hash).get("tgWebAppData");
+		if (!data) return;
+		init(data);
 	}, []);
 
 	return (
-		authorized && (
-			<DictionariesStoreContext.Provider value={dictionariesStore}>{children}</DictionariesStoreContext.Provider>
-		)
+		<StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
+			<ThemeProvider theme={defaultTheme}>
+				<GlobalStyle />
+				{children}
+			</ThemeProvider>
+		</StyleSheetManager>
 	);
 };
 
