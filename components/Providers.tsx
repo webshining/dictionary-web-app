@@ -22,36 +22,15 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 		return <>{styles}</>;
 	});
 
-	// const [theme, setTheme] = useState<DefaultTheme>(defaultTheme);
-	// useEffect(() => {
-	// 	const waitForTelegram = (): Promise<any> => {
-	// 		return new Promise((resolve) => {
-	// 			const checkTelegram = () => {
-	// 				const w = window as any;
-	// 				if (w.Telegram && w.Telegram.WebApp) {
-	// 					resolve(w.Telegram.WebApp);
-	// 				} else {
-	// 					setTimeout(checkTelegram, 100);
-	// 				}
-	// 			};
-	// 			checkTelegram();
-	// 		});
-	// 	};
-
-	// 	waitForTelegram().then((webapp) => {
-	// 		setTheme({
-	// 			colors: { primary: webapp.themeParams.text_color, accent: webapp.themeParams.accent_text_color },
-	// 		});
-	// 	});
-	// }, []);
-
 	useEffect(() => {
 		let hash = window.location.hash;
 		if (!hash) return;
 		hash = hash.slice(1);
 		const data = new URLSearchParams(hash).get("tgWebAppData");
 		if (!data) return;
-		init(data);
+		init(data).then(() => {
+			window.location.replace(`${window.location.origin}${window.location.pathname}`);
+		});
 	}, []);
 
 	return (

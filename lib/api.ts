@@ -10,18 +10,7 @@ const generateHeaders = async (): Promise<Record<string, string>> => {
 	return headers;
 };
 
-interface InitResponse {
-	id: number;
-	name: string;
-	username: string | undefined | null;
-	lang: string;
-	languages: {
-		id: number;
-		name: string;
-	}[];
-}
-
-export async function init(data: string): Promise<InitResponse | null> {
+export async function init(data: string) {
 	const body = JSON.stringify({ init_data: data });
 	const headers = await generateHeaders();
 	const res = await fetch(`${process.env.API_URL}/init`, { method: "POST", body, headers });
@@ -41,7 +30,7 @@ export async function init(data: string): Promise<InitResponse | null> {
 			domain: process.env.DOMAIN,
 		});
 	}
-	return (await res.json()) as InitResponse;
+	return await res.json();
 }
 
 interface WordResponse {
