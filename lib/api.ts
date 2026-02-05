@@ -13,7 +13,7 @@ const generateHeaders = async (): Promise<Record<string, string>> => {
 interface InitResponse {
 	id: number;
 	name: string;
-	username: string;
+	username: string | undefined | null;
 	lang: string;
 	languages: {
 		id: number;

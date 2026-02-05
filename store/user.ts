@@ -8,7 +8,7 @@ export interface Language {
 export interface User {
 	id: number;
 	name: string;
-	username: string;
+	username: string | undefined | null;
 	lang: string;
 }
 
