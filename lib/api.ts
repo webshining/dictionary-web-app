@@ -24,7 +24,7 @@ interface InitResponse {
 export async function init(data: string): Promise<InitResponse | null> {
 	const body = JSON.stringify({ init_data: data });
 	const headers = await generateHeaders();
-	const res = await fetch("http://localhost:4000/api/init", { method: "POST", body, headers });
+	const res = await fetch(`${process.env.API_URL}/init`, { method: "POST", body, headers });
 
 	if (res.status !== 200) return null;
 
@@ -38,7 +38,7 @@ export async function init(data: string): Promise<InitResponse | null> {
 			httpOnly: true,
 			sameSite: "none",
 			secure: true,
-			domain: "localhost",
+			domain: process.env.DOMAIN,
 		});
 	}
 	return (await res.json()) as InitResponse;
@@ -55,7 +55,7 @@ interface WordResponse {
 
 export async function getWords(): Promise<WordResponse[] | null> {
 	const headers = await generateHeaders();
-	const res = await fetch("http://localhost:4000/api/words", { headers });
+	const res = await fetch(`${process.env.API_URL}/words`, { headers });
 
 	if (res.status !== 200) return null;
 
