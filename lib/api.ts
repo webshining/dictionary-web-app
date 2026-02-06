@@ -35,7 +35,7 @@ export async function init(data: string | null) {
 	return "ok";
 }
 
-interface WordResponse {
+export interface WordResponse {
 	id: number;
 	translations: {
 		id: number;
@@ -51,4 +51,14 @@ export async function getWords(): Promise<WordResponse[] | null> {
 	if (res.status !== 200) return null;
 
 	return (await res.json()) as WordResponse[];
+}
+
+export async function deleteWord(id: number): Promise<"ok" | "failed" | null> {
+	const headers = await generateHeaders();
+	const res = await fetch(`${process.env.API_URL}/words/${id}`, { method: "DELETE", headers });
+
+	if (res.status === 401) return null;
+	if (res.status !== 200) return "failed";
+
+	return "ok";
 }

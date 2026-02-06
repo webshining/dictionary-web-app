@@ -1,27 +1,9 @@
 "use client";
-import { useServerInsertedHTML } from "next/navigation";
-import { useEffect, useState } from "react";
-import { type DefaultTheme, ServerStyleSheet, StyleSheetManager, ThemeProvider } from "styled-components";
+import { useEffect } from "react";
 
-import { GlobalStyle } from "@/app/global.css";
 import { init } from "@/lib/api";
 
-const defaultTheme: DefaultTheme = {
-	colors: {
-		primary: "#4A4A4A",
-		accent: "#4A4A4A",
-		background: "#DAEBF6",
-	},
-};
-
 const Providers = ({ children }: { children: React.ReactNode }) => {
-	const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
-	useServerInsertedHTML(() => {
-		const styles = styledComponentsStyleSheet.getStyleElement();
-		styledComponentsStyleSheet.instance.clearTag();
-		return <>{styles}</>;
-	});
-
 	useEffect(() => {
 		let hash = window.location.hash;
 		if (!hash) return;
@@ -33,14 +15,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 		});
 	}, []);
 
-	return (
-		<StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-			<ThemeProvider theme={defaultTheme}>
-				<GlobalStyle />
-				{children}
-			</ThemeProvider>
-		</StyleSheetManager>
-	);
+	return children;
 };
 
 export default Providers;
