@@ -27,8 +27,8 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 		if (!hash) return;
 		hash = hash.slice(1);
 		const data = new URLSearchParams(hash).get("tgWebAppData");
-		if (!data) return;
-		init(data).then(() => {
+		init(data).then((data) => {
+			if (data === null) return (window as any).Telegram.WebApp.close();
 			window.location.replace(`${window.location.origin}${window.location.pathname}`);
 		});
 	}, []);

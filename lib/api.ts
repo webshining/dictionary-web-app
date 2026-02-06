@@ -10,14 +10,16 @@ const generateHeaders = async (): Promise<Record<string, string>> => {
 	return headers;
 };
 
-export async function init(data: string) {
+export async function init(data: string | null) {
+	const cookiesStore = await cookies();
+	if (!data && cookiesStore.get("session_id")) return "ok";
+
 	const body = JSON.stringify({ init_data: data });
 	const headers = await generateHeaders();
 	const res = await fetch(`${process.env.API_URL}/init`, { method: "POST", body, headers });
 
 	if (res.status !== 200) return null;
 
-	const cookiesStore = await cookies();
 	let session_id = res.headers.get("set-cookie");
 	if (session_id) {
 		session_id = session_id.split(";")[0].split("=")[1];
@@ -30,7 +32,7 @@ export async function init(data: string) {
 			domain: process.env.DOMAIN,
 		});
 	}
-	return await res.json();
+	return "ok";
 }
 
 interface WordResponse {
