@@ -1,38 +1,20 @@
 "use client";
 
+import { validate } from "@/lib/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useEffect, useState } from "react";
 
-import { init } from "@/lib/api";
-import GlobalStyle from "./GlobalStyle.css";
-
 const queryClient = new QueryClient();
-
-export default function Providers({ children }: { children: React.ReactNode }) {
-	const [ready, setReady] = useState(false);
+const Providers = ({ authorized, children }: { authorized: boolean; children: React.ReactNode }) => {
+	const [validated, setValidated] = useState(authorized);
 
 	useEffect(() => {
-		let hash = window.location.hash;
-		if (!hash) {
-			setReady(true);
-			return;
-		}
-		hash = hash.slice(1);
-		const data = new URLSearchParams(hash).get("tgWebAppData");
-		init(data).then((data) => {
-			if (data === null) {
-				return (window as any).Telegram.WebApp.close();
-			}
-			window.location.replace(`${window.location.origin}${window.location.pathname}`);
-		});
-	}, []);
+		const user = window.Telegram.WebApp.initDataUnsafe.user;
+		if (!user) return;
+		if (!authorized) validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
+	}, [authorized]);
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			<GlobalStyle />
-			{ready && children}
-			<ReactQueryDevtools />
-		</QueryClientProvider>
-	);
-}
+	return validated ? <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> : null;
+};
+
+export default Providers;
