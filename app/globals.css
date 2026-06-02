@@ -1,10 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* --background: #8289ad; */
-  /* --background: linear-gradient(to bottom right, rgb(86, 102, 156), rgb(137, 171, 233)); */
   --background: url("/art.jpeg") top / cover no-repeat;
-  /* --foreground: #4b5677; */
   --foreground: #f0f0f0;
 }
 

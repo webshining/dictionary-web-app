@@ -1,6 +1,7 @@
 import NavBar from "@/components/NavBar";
 import Providers from "@/components/Providers";
 import { checkAuthorized } from "@/lib/auth";
+import { getMyLanguages } from "@/lib/languages";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -17,6 +18,7 @@ const geistMono = Geist_Mono({
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const authorized = await checkAuthorized();
+	const languages = authorized ? await getMyLanguages() : [];
 
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
@@ -44,7 +46,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<feDisplacementMap in="SourceGraphic" scale="30" />
 					</filter>
 				</svg>
-				<Providers authorized={authorized}>
+				<Providers authorized={authorized} languages={languages}>
 					<main className="relative w-full h-full flex flex-col gap-2 p-2 overflow-y-auto">
 						<div className="flex-1">{children}</div>
 						<NavBar />

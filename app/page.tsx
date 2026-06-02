@@ -1,25 +1,20 @@
-import { Words } from "@/types/word";
-import { cookies } from "next/headers";
+import { getMyWords } from "@/lib/words";
 
 const page = async () => {
-	const cookiesStore = await cookies();
-	const response = await fetch(`${process.env.API_URL}/words`, {
-		headers: { Authorization: `Bearer ${cookiesStore.get("session")!.value}` },
-	});
-	const words = Words.parse(await response.json());
+	const words = await getMyWords();
 	return (
 		<div className="flex flex-col gap-2">
 			{words.map((w) => (
 				<div key={w.id} className="p-2 flex flex-col gap-2 rounded-xl glass">
 					<div className="flex items-center justify-between">
 						<div>{w.translations[0].translation}</div>
-						<div>{w.translations[0].language}</div>
+						<div>{w.translations[0].language.display}</div>
 					</div>
 					<div className="p-2 rounded-lg glass">
 						{w.translations.slice(1).map((t) => (
-							<div key={`${w.id}:${t.language}`} className="flex items-center justify-between">
+							<div key={`${w.id}:${t.language.id}`} className="flex items-center justify-between">
 								<div>{t.translation}</div>
-								<div>{t.language}</div>
+								<div>{t.language.display}</div>
 							</div>
 						))}
 					</div>
