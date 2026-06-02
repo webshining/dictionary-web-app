@@ -5,14 +5,14 @@ import { useCallback, useRef, useState } from "react";
 
 const page = () => {
 	const [active, setActive] = useState(false);
-
 	const [dragging, setDragging] = useState(false);
-	// const [mo, setDragging] = useState(false);
+	const [moving, setMoving] = useState(false);
 
 	const card = useRef<HTMLDivElement>(null);
 	const start = useRef(0);
 
 	const startDragging = (e: React.PointerEvent<HTMLDivElement>) => {
+		if (active) return;
 		start.current = e.clientX;
 		setDragging(true);
 	};
@@ -21,14 +21,19 @@ const page = () => {
 		(e: React.PointerEvent<HTMLDivElement>) => {
 			if (!dragging || !card.current) return;
 			const rotate = e.clientX - start.current;
-			card.current.style.transform = `translateX(${rotate}px) rotate(${rotate / 15}deg)`;
+			if (Math.abs(rotate) > 5 || moving) {
+				if (!moving) setMoving(true);
+				card.current.style.transform = `translateX(${rotate}px) rotate(${rotate / 15}deg)`;
+			}
 		},
-		[dragging],
+		[dragging, moving],
 	);
 
 	const stopDragging = (e: React.PointerEvent<HTMLDivElement>) => {
 		start.current = 0;
+		card.current!.style.transform = "";
 		setDragging(false);
+		setTimeout(() => setMoving(false), 300);
 	};
 
 	return (
@@ -48,7 +53,7 @@ const page = () => {
 						"w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-all duration-300 glass",
 						active && "rotate-x-45",
 					)}
-					onClick={() => !dragging && setActive(!active)}
+					onClick={() => !moving && setActive(!active)}
 				>
 					test
 				</button>
