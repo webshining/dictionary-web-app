@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const authorized = await checkAuthorized();
-	const languages = authorized ? await getMyLanguages() : [];
+	const languages = await getMyLanguages();
 
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>

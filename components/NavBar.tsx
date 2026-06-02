@@ -19,6 +19,7 @@ const NavBar = () => {
 							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
 							pathname === "/" && "bg-blue-100/50",
 						)}
+						prefetch
 					>
 						<WholeWord size={20} />
 						<span>Words</span>
@@ -31,6 +32,7 @@ const NavBar = () => {
 							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
 							pathname.startsWith("/cards") && "bg-blue-100/50",
 						)}
+						prefetch
 					>
 						<BrainCircuit size={20} />
 						<span>Cards</span>
@@ -43,6 +45,7 @@ const NavBar = () => {
 							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
 							pathname.startsWith("/profile") && "bg-blue-100/50",
 						)}
+						prefetch
 					>
 						<User size={20} />
 						<span>Profile</span>

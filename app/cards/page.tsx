@@ -7,7 +7,7 @@ const page = async () => {
 
 	return (
 		<div className="relative w-full h-full grid grid-rows-[1fr_auto] items-center justify-center">
-			<Card word={word} />
+			{word && <Card word={word} />}
 			<LanguageSelector />
 		</div>
 	);
