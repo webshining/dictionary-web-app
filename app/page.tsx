@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 
 const page = async () => {
 	const cookiesStore = await cookies();
-	const response = await fetch("http://localhost:4000/api/words", {
-		headers: { Authorization: `Bearer ${cookiesStore.get("session").value}` },
+	const response = await fetch(`${process.env.API_URL}/words`, {
+		headers: { Authorization: `Bearer ${cookiesStore.get("session")!.value}` },
 	});
 	const words = Words.parse(await response.json());
 	return (
