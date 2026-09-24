@@ -6,7 +6,7 @@ import type { LanguageType } from "@/types/language";
 import { cookies } from "next/headers";
 
 const page = async () => {
-	const { get, set } = await cookies();
+	const { get } = await cookies();
 
 	const word = await getMyRandomWord();
 	const languages = await getMyLanguages();
@@ -21,14 +21,8 @@ const page = async () => {
 
 	return (
 		<div className="relative w-full h-full grid grid-rows-[1fr_auto] items-center justify-center">
-			{word && <Card word={word} />}
-			<LanguageSelector
-				languages={languages}
-				selected={selected}
-				setSelected={async (id: number) => {
-					await set("language", String(id));
-				}}
-			/>
+			{word && <Card word={word} selectedLanguage={selected} />}
+			<LanguageSelector languages={languages} selectedLanguage={selected} />
 		</div>
 	);
 };

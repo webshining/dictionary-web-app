@@ -1,23 +1,24 @@
 "use client";
 
+import { saveLanguage } from "@/lib/languages";
 import type { LanguageType } from "@/types/language";
 import clsx from "clsx";
 import { memo, useState } from "react";
 
 const LanguageSelector = ({
 	languages,
-	selected,
-	setSelected,
+	selectedLanguage,
 }: {
 	languages: LanguageType[];
-	selected?: LanguageType;
-	setSelected: (id: number) => void;
+	selectedLanguage?: LanguageType;
 }) => {
 	const [active, setActive] = useState(false);
+	const [selected, setSelected] = useState<LanguageType | null>(selectedLanguage || null);
 
-	const onSelected = async (id: number) => {
+	const onSelected = async (language: LanguageType) => {
 		setActive(false);
-		await setSelected(id);
+		setSelected(language);
+		await saveLanguage(language.id);
 	};
 
 	return (
@@ -27,7 +28,7 @@ const LanguageSelector = ({
 			</button>
 			<ul
 				className={clsx(
-					"p-2 px-4 absolute bottom-[calc(100%+4px)] origin-bottom left-1/2 -translate-x-1/2 w-70 flex flex-col gap-2 rounded-xl transition-all duration-100 ease-in-out",
+					"p-2 px-4 absolute bottom-[calc(100%+4px)] origin-bottom left-1/2 -translate-x-1/2 w-70 flex flex-col gap-2 border-b-2 border-foreground bg-background glass rounded-xl transition-all duration-100 ease-in-out",
 					!active && "scale-60 opacity-0 pointer-events-none",
 				)}
 			>
@@ -35,7 +36,7 @@ const LanguageSelector = ({
 					.filter((l) => l.id !== selected?.id)
 					.map((l) => (
 						<li key={l.id}>
-							<button type="button" className="w-full text-start" onClick={() => onSelected(l.id)}>
+							<button type="button" className="w-full text-start" onClick={() => onSelected(l)}>
 								{l.display}
 							</button>
 						</li>

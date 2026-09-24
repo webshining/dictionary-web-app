@@ -1,11 +1,12 @@
 "use client";
 
+import type { LanguageType } from "@/types/language";
 import type { WordType } from "@/types/word";
 import clsx from "clsx";
 import { motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useState } from "react";
 
-const Card = ({ word }: { word: WordType }) => {
+const Card = ({ word, selectedLanguage }: { word: WordType; selectedLanguage?: LanguageType }) => {
 	const [active, setActive] = useState(false);
 	const [moving, setMoving] = useState(false);
 	const [dragging, setDragging] = useState(false);
@@ -37,17 +38,17 @@ const Card = ({ word }: { word: WordType }) => {
 			onAnimationComplete={() => setMoving(false)}
 		>
 			<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
-				{/* {selected &&
+				{selectedLanguage &&
 					word.translations
-						.filter((t) => t.language.id !== selected.id)
+						.filter((t) => t.language.id !== selectedLanguage.id)
 						.map((t) => t.translation)
-						.join(", ")} */}
+						.join(", ")}
 			</div>
 
 			<motion.button
 				type="button"
 				className={clsx(
-					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out",
+					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out text-background",
 					active && "rotate-x-45",
 				)}
 				style={{
@@ -55,14 +56,14 @@ const Card = ({ word }: { word: WordType }) => {
 						return `
 								linear-gradient(
 									${offset > 0 ? offset : Math.abs(offset) + 180}deg,
-									${offset > 0 ? `rgba(34,197,94,.35), rgba(20, 20, 20, 0.28) ${Math.abs(offset)}%` : `rgba(239,68,68,.35), rgba(20, 20, 20, 0.28) ${Math.abs(offset)}%`}
+									${offset > 0 ? `#72ce95, var(--color-foreground) ${Math.abs(offset)}%` : `#e78a8a, var(--color-foreground) ${Math.abs(offset)}%`}
 								)
 							`;
 					}),
 				}}
 				onClick={() => !moving && setActive((v) => !v)}
 			>
-				{/* {selected && word.translations.find((t) => t.language.id === selected.id)?.translation} */}
+				{selectedLanguage && word.translations.find((t) => t.language.id === selectedLanguage.id)?.translation}
 			</motion.button>
 		</motion.div>
 	);

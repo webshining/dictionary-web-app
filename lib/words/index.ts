@@ -13,6 +13,16 @@ export const getMyWords = async () => {
 	});
 	return response.status === 200 ? Words.parse(await response.json()) : [];
 };
+export const removeWord = async (id: number) => {
+	const cookiesStore = await cookies();
+	const session = cookiesStore.get("session");
+	if (!session) return;
+
+	await fetch(`${process.env.API_URL}/me/words/${id}`, {
+		method: "DELETE",
+		headers: { Authorization: `Bearer ${session.value}` },
+	});
+};
 export const getMyRandomWord = async () => {
 	const cookiesStore = await cookies();
 	const session = cookiesStore.get("session");
