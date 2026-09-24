@@ -1,14 +1,11 @@
 "use client";
 
-import useLanguage from "@/store/language";
 import type { WordType } from "@/types/word";
 import clsx from "clsx";
 import { motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useState } from "react";
 
 const Card = ({ word }: { word: WordType }) => {
-	const selected = useLanguage((s) => s.selected);
-
 	const [active, setActive] = useState(false);
 	const [moving, setMoving] = useState(false);
 	const [dragging, setDragging] = useState(false);
@@ -40,17 +37,17 @@ const Card = ({ word }: { word: WordType }) => {
 			onAnimationComplete={() => setMoving(false)}
 		>
 			<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
-				{selected &&
+				{/* {selected &&
 					word.translations
 						.filter((t) => t.language.id !== selected.id)
 						.map((t) => t.translation)
-						.join(", ")}
+						.join(", ")} */}
 			</div>
 
 			<motion.button
 				type="button"
 				className={clsx(
-					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out glass",
+					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out",
 					active && "rotate-x-45",
 				)}
 				style={{
@@ -65,7 +62,7 @@ const Card = ({ word }: { word: WordType }) => {
 				}}
 				onClick={() => !moving && setActive((v) => !v)}
 			>
-				{selected && word.translations.find((t) => t.language.id === selected.id)?.translation}
+				{/* {selected && word.translations.find((t) => t.language.id === selected.id)?.translation} */}
 			</motion.button>
 		</motion.div>
 	);

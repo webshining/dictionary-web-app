@@ -1,31 +1,19 @@
 import NavBar from "@/components/NavBar";
-import Providers from "@/components/Providers";
-import { checkAuthorized } from "@/lib/auth";
-import { getMyLanguages } from "@/lib/languages";
-import { Geist, Geist_Mono } from "next/font/google";
+import ServerProviders from "@/components/ServerProviders";
+import { Nunito } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const nunito = Nunito({
+	variable: "--font-nunito-sans",
 	subsets: ["latin"],
 });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const authorized = await checkAuthorized();
-	const languages = await getMyLanguages();
-
 	return (
-		<html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-			<head>
+		<html lang="en" className={`${nunito.className} antialiased`} suppressHydrationWarning>
+			<body className="w-dvw h-dvh overflow-hidden bg-background text-foreground">
 				<Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-			</head>
-			<body className="w-dvw h-dvh overflow-hidden">
 				<svg style={{ display: "none" }} aria-hidden={true}>
 					<filter id="displacementFilter">
 						<feImage
@@ -46,12 +34,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<feDisplacementMap in="SourceGraphic" scale="30" />
 					</filter>
 				</svg>
-				<Providers authorized={authorized} languages={languages}>
-					<main className="relative w-full h-full flex flex-col gap-2 p-2 overflow-y-auto">
+				<ServerProviders>
+					<main className="relative w-full h-full flex flex-col overflow-y-auto">
 						<div className="flex-1">{children}</div>
 						<NavBar />
 					</main>
-				</Providers>
+				</ServerProviders>
 			</body>
 		</html>
 	);

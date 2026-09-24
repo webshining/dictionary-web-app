@@ -13,3 +13,7 @@ export const getMyLanguages = async () => {
 	});
 	return response.status === 200 ? Languages.parse(await response.json()) : [];
 };
+
+export const saveLanguage = async () => {
+	
+}

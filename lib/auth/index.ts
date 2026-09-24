@@ -26,7 +26,7 @@ export async function validate(data: string): Promise<boolean> {
 
 	const user_id = String(JSON.parse(user)["id"]);
 
-	const token = jwt.sign({ userId: user_id }, process.env.BOT_TOKEN!, { algorithm: "HS256" });
+	const token = jwt.sign({ sub: user_id }, process.env.BOT_TOKEN!, { algorithm: "HS256" });
 	const cookiesStore = await cookies();
 	cookiesStore.set("session", token, { httpOnly: true, sameSite: "lax" });
 
@@ -51,5 +51,5 @@ export async function verify(): Promise<UserPayload | null> {
 }
 
 interface UserPayload extends jwt.JwtPayload {
-	userId: string;
+	sub: string;
 }

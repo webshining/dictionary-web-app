@@ -1,29 +1,15 @@
 @import "tailwindcss";
 
-:root {
-  --background: url("/art.jpeg") top / cover no-repeat;
-  --foreground: #f0f0f0;
+@theme {
+  --color-background: #f5e9dd;
+  --color-foreground: #494949;
+  --color-accent: #e85d56;
 }
 
 *::-webkit-scrollbar {
   display: none;
 }
 
-* {
-  user-select: none;
-}
-
-/* @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-} */
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-}
 body::before {
   content: "";
   position: absolute;
@@ -39,14 +25,10 @@ body::before {
 
 .glass {
   backdrop-filter: blur(10px) url(#displacementFilter);
-
-  background: rgba(20, 20, 20, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 button {
   cursor: pointer;
-  color: unset;
 }
 
 input,

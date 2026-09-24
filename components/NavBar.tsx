@@ -10,48 +10,59 @@ const NavBar = () => {
 	const pathname = usePathname();
 
 	return (
-		<div className="sticky bottom-0 left-0 p-1 px-1.5 flex justify-center rounded-2xl glass z-999">
-			<ul className="flex gap-2">
-				<li>
-					<Link
-						href="/"
-						className={clsx(
-							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
-							pathname === "/" && "bg-blue-100/50",
-						)}
-						prefetch
-					>
-						<WholeWord size={20} />
-						<span>Words</span>
-					</Link>
-				</li>
-				<li>
-					<Link
-						href="/cards"
-						className={clsx(
-							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
-							pathname.startsWith("/cards") && "bg-blue-100/50",
-						)}
-						prefetch
-					>
-						<BrainCircuit size={20} />
-						<span>Cards</span>
-					</Link>
-				</li>
-				<li>
-					<Link
-						href="/profile"
-						className={clsx(
-							"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
-							pathname.startsWith("/profile") && "bg-blue-100/50",
-						)}
-						prefetch
-					>
-						<User size={20} />
-						<span>Profile</span>
-					</Link>
-				</li>
-			</ul>
+		<div className="sticky w-full bottom-0 left-0 py-2 flex justify-center z-99900000">
+			<div className="rounded-[50px] bg-background/50 p-1.5 flex justify-center z-999 glass">
+				<ul className="flex gap-2">
+					<li>
+						<Link
+							href="/"
+							className={clsx(
+								"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
+								pathname === "/" && "text-accent",
+							)}
+							prefetch
+						>
+							<WholeWord
+								className="transition-all duration-300 ease-in-out"
+								size={22}
+								strokeWidth={pathname === "/" ? 3 : 1}
+							/>
+						</Link>
+					</li>
+					<li>
+						<Link
+							href="/cards"
+							className={clsx(
+								"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
+								pathname.startsWith("/cards") && "text-accent",
+							)}
+							prefetch
+						>
+							<BrainCircuit
+								className="transition-all duration-300 ease-in-out"
+								size={22}
+								strokeWidth={pathname.startsWith("/cards") ? 3 : 1}
+							/>
+						</Link>
+					</li>
+					<li>
+						<Link
+							href="/profile"
+							className={clsx(
+								"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
+								pathname.startsWith("/profile") && "text-accent",
+							)}
+							prefetch
+						>
+							<User
+								className="transition-all duration-300 ease-in-out"
+								size={22}
+								strokeWidth={pathname.startsWith("/profile") ? 3 : 1}
+							/>
+						</Link>
+					</li>
+				</ul>
+			</div>
 		</div>
 	);
 };
