@@ -1,10 +1,10 @@
 "use client";
 
+import clsx from "clsx";
+import { motion, type PanInfo, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
+import { useState } from "react";
 import type { LanguageType } from "@/types/language";
 import type { WordType } from "@/types/word";
-import clsx from "clsx";
-import { motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
-import { useState } from "react";
 
 const Card = ({ word, selectedLanguage }: { word: WordType; selectedLanguage?: LanguageType }) => {
 	const [active, setActive] = useState(false);
@@ -20,6 +20,21 @@ const Card = ({ word, selectedLanguage }: { word: WordType; selectedLanguage?: L
 		}
 	});
 
+	const handleDragStart = () => {
+		setDragging(true);
+		setMoving(true);
+	};
+
+	const handleDragEnd = (_e: any, info: PanInfo) => {
+		setDragging(false);
+		x.set(0);
+
+		const currentX = x.get();
+		if (Math.abs(currentX) >= 180 || Math.abs(info.velocity.x) > 500) {
+			
+		}
+	};
+
 	return (
 		<motion.div
 			className="relative w-80 aspect-3/4 perspective-[1400px]"
@@ -27,14 +42,8 @@ const Card = ({ word, selectedLanguage }: { word: WordType; selectedLanguage?: L
 			drag={active ? false : "x"}
 			dragElastic={0.5}
 			dragConstraints={{ left: 0, right: 0 }}
-			onDragStart={() => {
-				setDragging(true);
-				setMoving(true);
-			}}
-			onDragEnd={() => {
-				setDragging(false);
-				x.set(0);
-			}}
+			onDragStart={handleDragStart}
+			onDragEnd={handleDragEnd}
 			onAnimationComplete={() => setMoving(false)}
 		>
 			<div className="absolute bottom-5 w-full text-center text-2xl gap-2">

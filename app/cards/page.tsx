@@ -1,5 +1,6 @@
 import Card from "@/components/Card";
 import LanguageSelector from "@/components/LanguageSelector";
+import { generateMyCards } from "@/lib/cards";
 import { getMyLanguages } from "@/lib/languages";
 import { getMyRandomWord } from "@/lib/words";
 import type { LanguageType } from "@/types/language";
@@ -18,6 +19,8 @@ const page = async () => {
 	} else {
 		selected = languages.at(0);
 	}
+
+	const cards = await generateMyCards();
 
 	return (
 		<div className="relative w-full h-full grid grid-rows-[1fr_auto] items-center justify-center">
