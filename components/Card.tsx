@@ -9,7 +9,7 @@ import { motion, type PanInfo, useMotionValue, useMotionValueEvent, useTransform
 import { useEffect, useRef, useState } from "react";
 
 const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage?: LanguageType }) => {
-	const { currentWord, setCards, next } = useCardsStore();
+	const { currentWord, cards: storeCards, setCards, next } = useCardsStore();
 	useEffect(() => {
 		setCards(cards);
 	}, [cards, setCards]);
@@ -76,7 +76,7 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 		}
 	};
 
-	return (
+	return storeCards.length > 0 ? (
 		currentWord && (
 			<motion.div
 				className="relative w-80 aspect-3/4 perspective-[1400px]"
@@ -112,6 +112,36 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 				</motion.button>
 			</motion.div>
 		)
+	) : (
+		<motion.div
+			className="relative w-80 aspect-3/4 perspective-[1400px]"
+			style={{ x, rotate }}
+			drag={active ? false : "x"}
+			dragElastic={0.5}
+			dragConstraints={{ left: 0, right: 0 }}
+			onDragStart={handleDragStart}
+			onDragEnd={() => {
+				setDragging(false);
+				x.set(0);
+			}}
+			onAnimationComplete={() => setMoving(false)}
+		>
+			<div className="absolute bottom-5 w-full text-center text-2xl gap-2">There are no cards left.</div>
+
+			<motion.button
+				type="button"
+				className={clsx(
+					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out text-background",
+					active && "rotate-x-45",
+				)}
+				style={{
+					background,
+				}}
+				onClick={onPeek}
+			>
+				There are no cards left.
+			</motion.button>
+		</motion.div>
 	);
 };
 
