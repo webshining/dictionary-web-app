@@ -1,5 +1,6 @@
 "use client";
 
+import { reviewWord } from "@/lib/cards";
 import useCardsStore from "@/store/cards";
 import type { LanguageType } from "@/types/language";
 import type { WordType } from "@/types/word";
@@ -9,7 +10,6 @@ import { useEffect, useRef, useState } from "react";
 
 const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage?: LanguageType }) => {
 	const { currentWord, setCards, next } = useCardsStore();
-	const displayWord = currentWord ?? cards.at(0);
 	useEffect(() => {
 		setCards(cards);
 	}, [cards, setCards]);
@@ -32,24 +32,52 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 	});
 
 	const quality = useRef(5);
+	const startTime = useRef(Date.now());
+	const peeked = useRef(false);
+	useEffect(() => {
+		quality.current = 5;
+		startTime.current = Date.now();
+		peeked.current = false;
+	}, [currentWord]);
 	const handleDragStart = () => {
 		setDragging(true);
 		setMoving(true);
 	};
-	const handleDragEnd = (_e: any, info: PanInfo) => {
+	const handleDragEnd = async (_e: any, info: PanInfo) => {
+		if (!currentWord) return;
+
 		const currentX = x.get();
-		if (Math.abs(currentX) >= 180 || Math.abs(info.velocity.x) > 500) {
-			if (currentX < 0) quality.current = 2;
+		const velocity = info.velocity.x;
+		const isSwipeValid = Math.abs(currentX) >= 180 || Math.abs(velocity) > 500;
+
+		if (isSwipeValid) {
+			const timeSpent = (Date.now() - startTime.current) / 1000;
+			const isRightSwipe = currentX > 0 || velocity > 500;
+
+			if (isRightSwipe) {
+				quality.current = timeSpent < 2 ? 5 : timeSpent < 4 ? 4 : 3;
+				if (peeked.current) quality.current -= 1;
+			} else {
+				quality.current = 1;
+				if (peeked.current) quality.current += 1;
+			}
 		}
+
+		await reviewWord(currentWord.id, quality.current);
 
 		next();
 		setDragging(false);
 		x.set(0);
-		quality.current = 5;
+	};
+	const onPeek = () => {
+		if (!moving) {
+			peeked.current = true;
+			setActive((v) => !v);
+		}
 	};
 
 	return (
-		displayWord && (
+		currentWord && (
 			<motion.div
 				className="relative w-80 aspect-3/4 perspective-[1400px]"
 				style={{ x, rotate }}
@@ -62,7 +90,7 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 			>
 				<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
 					{selectedLanguage &&
-						displayWord.translations
+						currentWord.translations
 							.filter((t) => t.language.id !== selectedLanguage.id)
 							.map((t) => t.translation)
 							.join(", ")}
@@ -77,10 +105,10 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 					style={{
 						background,
 					}}
-					onClick={() => !moving && setActive((v) => !v)}
+					onClick={onPeek}
 				>
 					{selectedLanguage &&
-						displayWord.translations.find((t) => t.language.id === selectedLanguage.id)?.translation}
+						currentWord.translations.find((t) => t.language.id === selectedLanguage.id)?.translation}
 				</motion.button>
 			</motion.div>
 		)

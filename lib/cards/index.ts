@@ -14,6 +14,14 @@ export const generateMyCards = async () => {
 	return response.status === 200 ? Words.parse(await response.json()) : [];
 };
 
-export const reviewWord = async (wordId: number, correct: boolean) => {
-	
-}
+export const reviewWord = async (id: number, quality: number) => {
+	const cookiesStore = await cookies();
+	const session = cookiesStore.get("session");
+	if (!session) return;
+
+	await fetch(`${process.env.API_URL}/me/words/${id}/review`, {
+		method: "POST",
+		body: JSON.stringify({ quality }),
+		headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.value}` },
+	});
+};
