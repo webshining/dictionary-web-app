@@ -11,8 +11,8 @@ const Providers = ({ authorized, children }: { authorized: boolean; children: Re
 	useEffect(() => {
 		const user = window.Telegram.WebApp.initDataUnsafe.user;
 		if (!user) return;
-		if (!authorized) validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
-	}, [authorized]);
+		validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
+	}, []);
 
 	return validated ? <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> : null;
 };
