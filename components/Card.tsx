@@ -61,11 +61,10 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 				quality.current = 1;
 				if (peeked.current) quality.current += 1;
 			}
+			await reviewWord(currentWord.id, quality.current);
+			next();
 		}
 
-		await reviewWord(currentWord.id, quality.current);
-
-		next();
 		setDragging(false);
 		x.set(0);
 	};
