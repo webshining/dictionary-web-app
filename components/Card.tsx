@@ -8,11 +8,15 @@ import clsx from "clsx";
 import { motion, type PanInfo, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage?: LanguageType }) => {
+const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage: LanguageType }) => {
+	const [isHydrated, setIsHydrated] = useState(false);
 	const { currentWord, cards: storeCards, setCards, next } = useCardsStore();
 	useEffect(() => {
 		setCards(cards);
+		setIsHydrated(true);
 	}, [cards, setCards]);
+
+	const displayCard = isHydrated ? currentWord : cards.at(0);
 
 	const [active, setActive] = useState(false);
 	const [moving, setMoving] = useState(false);
@@ -75,42 +79,38 @@ const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage?
 		}
 	};
 
-	return storeCards.length > 0 ? (
-		currentWord && (
-			<motion.div
-				className="relative w-80 aspect-3/4 perspective-[1400px]"
-				style={{ x, rotate }}
-				drag={active ? false : "x"}
-				dragElastic={0.5}
-				dragConstraints={{ left: 0, right: 0 }}
-				onDragStart={handleDragStart}
-				onDragEnd={handleDragEnd}
-				onAnimationComplete={() => setMoving(false)}
-			>
-				<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
-					{selectedLanguage &&
-						currentWord.words
-							.filter((word) => word.language.id !== selectedLanguage.id)
-							.map((word) => word.word)
-							.join(", ")}
-				</div>
+	return displayCard ? (
+		<motion.div
+			className="relative w-80 aspect-3/4 perspective-[1400px]"
+			style={{ x, rotate }}
+			drag={active ? false : "x"}
+			dragElastic={0.5}
+			dragConstraints={{ left: 0, right: 0 }}
+			onDragStart={handleDragStart}
+			onDragEnd={handleDragEnd}
+			onAnimationComplete={() => setMoving(false)}
+		>
+			<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
+				{displayCard.words
+					.filter((word) => word.language.id !== selectedLanguage.id)
+					.map((word) => word.word)
+					.join(", ")}
+			</div>
 
-				<motion.button
-					type="button"
-					className={clsx(
-						"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out text-background",
-						active && "rotate-x-45",
-					)}
-					style={{
-						background,
-					}}
-					onClick={onPeek}
-				>
-					{selectedLanguage &&
-						currentWord.words.find((word) => word.language.id === selectedLanguage.id)?.word}
-				</motion.button>
-			</motion.div>
-		)
+			<motion.button
+				type="button"
+				className={clsx(
+					"relative w-full h-full rounded-2xl flex items-center justify-center origin-top text-4xl transition-transform duration-300 ease-in-out text-background",
+					active && "rotate-x-45",
+				)}
+				style={{
+					background,
+				}}
+				onClick={onPeek}
+			>
+				{displayCard.words.find((word) => word.language.id === selectedLanguage.id)?.word}
+			</motion.button>
+		</motion.div>
 	) : (
 		<motion.div
 			className="relative w-80 aspect-3/4 perspective-[1400px]"

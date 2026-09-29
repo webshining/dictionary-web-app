@@ -20,12 +20,12 @@ const page = async () => {
 
 	const cards = await generateMyCards();
 
-	return (
+	return selectedLanguage ? (
 		<div className="relative w-full h-full grid grid-rows-[1fr_auto] items-center justify-center">
 			<Card cards={cards} selectedLanguage={selectedLanguage} />
 			<LanguageSelector languages={languages} selectedLanguage={selectedLanguage} />
 		</div>
-	);
+	) : null;
 };
 
 export default page;
