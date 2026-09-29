@@ -14,7 +14,7 @@ export const generateMyCards = async () => {
 	return response.status === 200 ? Words.parse(await response.json()) : [];
 };
 
-export const reviewWord = async (id: number, quality: number) => {
+export const reviewWord = async (id: string, quality: number) => {
 	const cookiesStore = await cookies();
 	const session = cookiesStore.get("session");
 	if (!session) return;

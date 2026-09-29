@@ -13,7 +13,7 @@ export const getMyWords = async () => {
 	});
 	return response.status === 200 ? Words.parse(await response.json()) : [];
 };
-export const removeWord = async (id: number) => {
+export const removeWord = async (id: string) => {
 	const cookiesStore = await cookies();
 	const session = cookiesStore.get("session");
 	if (!session) return;

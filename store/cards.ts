@@ -1,11 +1,11 @@
-import type { WordType } from "@/types/word";
+import type { KnowType, WordsType } from "@/types/word";
 import { create } from "zustand";
 
 interface CardsStore {
-	cards: WordType[];
-	currentWord: WordType | null;
+	cards: WordsType;
+	currentWord: KnowType | null;
 
-	setCards: (cards: WordType[]) => void;
+	setCards: (cards: WordsType) => void;
 	next: () => void;
 }
 

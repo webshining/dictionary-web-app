@@ -1,7 +1,8 @@
 import * as z from "zod";
 
 export const Language = z.object({
-	id: z.number(),
+	id: z.string(),
+	value: z.string(),
 	display: z.string(),
 });
 

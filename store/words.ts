@@ -1,11 +1,11 @@
-import type { WordType } from "@/types/word";
+import type { WordsType } from "@/types/word";
 import { create } from "zustand";
 
 interface WordsStore {
-	words: WordType[];
+	words: WordsType;
 
-	setWords: (words: WordType[]) => void;
-	removeWord: (id: number) => void;
+	setWords: (words: WordsType) => void;
+	removeWord: (id: string) => void;
 }
 
 const useWordsStore = create<WordsStore>()((set) => ({

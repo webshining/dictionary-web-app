@@ -1,12 +1,12 @@
 "use client";
 
 import useWordsStore from "@/store/words";
-import type { WordType } from "@/types/word";
+import type { WordsType } from "@/types/word";
 import { AnimatePresence } from "framer-motion";
 import { memo, useEffect, useState } from "react";
 import WordItem from "./WordItem";
 
-const Words = ({ words }: { words: WordType[] }) => {
+const Words = ({ words }: { words: WordsType }) => {
 	const [isHydrated, setIsHydrated] = useState(false);
 	const { words: storeWords, setWords } = useWordsStore();
 

@@ -3,12 +3,12 @@
 import { reviewWord } from "@/lib/cards";
 import useCardsStore from "@/store/cards";
 import type { LanguageType } from "@/types/language";
-import type { WordType } from "@/types/word";
+import type { WordsType } from "@/types/word";
 import clsx from "clsx";
 import { motion, type PanInfo, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage?: LanguageType }) => {
+const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage?: LanguageType }) => {
 	const { currentWord, cards: storeCards, setCards, next } = useCardsStore();
 	useEffect(() => {
 		setCards(cards);
@@ -89,9 +89,9 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 			>
 				<div className="absolute bottom-5 w-full text-center text-2xl gap-2">
 					{selectedLanguage &&
-						currentWord.translations
-							.filter((t) => t.language.id !== selectedLanguage.id)
-							.map((t) => t.translation)
+						currentWord.words
+							.filter((word) => word.language.id !== selectedLanguage.id)
+							.map((word) => word.word)
 							.join(", ")}
 				</div>
 
@@ -107,7 +107,7 @@ const Card = ({ cards, selectedLanguage }: { cards: WordType[]; selectedLanguage
 					onClick={onPeek}
 				>
 					{selectedLanguage &&
-						currentWord.translations.find((t) => t.language.id === selectedLanguage.id)?.translation}
+						currentWord.words.find((word) => word.language.id === selectedLanguage.id)?.word}
 				</motion.button>
 			</motion.div>
 		)

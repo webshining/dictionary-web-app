@@ -14,7 +14,7 @@ export const getMyLanguages = async () => {
 	return response.status === 200 ? Languages.parse(await response.json()) : [];
 };
 
-export const saveLanguage = async (id: number) => {
+export const saveLanguage = async (id: string) => {
 	const { set } = await cookies();
 
 	await set("language", String(id));

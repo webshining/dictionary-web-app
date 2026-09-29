@@ -1,12 +1,11 @@
 "use client";
 
-import { removeWord } from "@/lib/words";
 import useWordsStore from "@/store/words";
-import type { WordType } from "@/types/word";
+import type { KnowType } from "@/types/word";
 import { motion, type PanInfo, useAnimation, useMotionValue } from "framer-motion";
 import { Shredder } from "lucide-react";
 
-const WordItem = ({ word }: { word: WordType }) => {
+const WordItem = ({ word }: { word: KnowType }) => {
 	const removeStoreWord = useWordsStore((state) => state.removeWord);
 
 	const controls = useAnimation();
@@ -29,13 +28,13 @@ const WordItem = ({ word }: { word: WordType }) => {
 		}
 	};
 
-	const onRemove = async (id: number) => {
-		removeStoreWord(id);
+	const onRemove = async () => {
+		removeStoreWord(word.id);
 		controls.start({
 			x: 0,
 			transition: { type: "spring", stiffness: 400, damping: 30 },
 		});
-		await removeWord(id);
+		// await removeWord(id);
 	};
 
 	return (
@@ -50,15 +49,15 @@ const WordItem = ({ word }: { word: WordType }) => {
 				onDragEnd={handleDragEnd}
 				whileTap={{ cursor: "grabbing" }}
 			>
-				{word.translations.map((t) => (
-					<div key={`${word.id}:${t.language.id}`} className="flex items-center justify-between">
-						<div>{t.translation}</div>
-						<div>{t.language.display}</div>
+				{word.words.map((word) => (
+					<div key={word.id} className="flex items-center justify-between">
+						<div>{word.word}</div>
+						<div>{word.language.display}</div>
 					</div>
 				))}
 			</motion.div>
 			<div className="absolute w-full h-full left-0 top-0 flex justify-end items-center p-4 bg-accent text-background rounded-xl z-1">
-				<button type="button" onClick={() => onRemove(word.id)}>
+				<button type="button" onClick={onRemove}>
 					<Shredder />
 				</button>
 			</div>
