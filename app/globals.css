@@ -10,6 +10,10 @@
   display: none;
 }
 
+* {
+  user-select: none;
+}
+
 body::before {
   content: "";
   position: absolute;

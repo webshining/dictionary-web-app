@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 
 const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage: LanguageType }) => {
 	const [isHydrated, setIsHydrated] = useState(false);
-	const { currentWord, cards: storeCards, setCards, next } = useCardsStore();
+	const { currentWord, setCards, next } = useCardsStore();
 	useEffect(() => {
 		setCards(cards);
 		setIsHydrated(true);
@@ -26,7 +26,8 @@ const Card = ({ cards, selectedLanguage }: { cards: WordsType; selectedLanguage:
 	const rotate = useTransform(x, (v) => v / 15);
 	const background = useTransform(x, (offset) => {
 		const absOffset = Math.abs(offset);
-		return `linear-gradient( ${offset > 0 ? offset : absOffset + 180}deg, ${offset > 0 ? `#72ce95, var(--color-foreground) ${absOffset}%` : `#e78a8a, var(--color-foreground) ${absOffset}%`})`;
+		const position = offset > 0 ? "bottom left" : "top right";
+		return `radial-gradient(150% 100% at ${position}, ${offset > 0 ? `#72ce95, var(--color-foreground) ${absOffset}%` : `#e78a8a, var(--color-foreground) ${absOffset}%`})`;
 	});
 
 	useMotionValueEvent(x, "change", (latest) => {

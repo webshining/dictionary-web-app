@@ -1,5 +1,6 @@
 "use client";
 
+import { removeWord } from "@/lib/words";
 import useWordsStore from "@/store/words";
 import type { KnowType } from "@/types/word";
 import { motion, type PanInfo, useAnimation, useMotionValue } from "framer-motion";
@@ -34,7 +35,7 @@ const WordItem = ({ word }: { word: KnowType }) => {
 			x: 0,
 			transition: { type: "spring", stiffness: 400, damping: 30 },
 		});
-		// await removeWord(id);
+		await removeWord(word.id);
 	};
 
 	return (
