@@ -1,6 +1,7 @@
 import { Stats } from "@/types/stats";
 import { ChartSpline, Flame, Logs, Metronome, Stone } from "lucide-react";
 import { cookies } from "next/headers";
+import Chart from "./Chart";
 import ProfilePicture from "./ProfilePicture";
 
 const page = async () => {
@@ -20,7 +21,7 @@ const page = async () => {
 			<div className="w-full grid grid-cols-2 grid-rows-2 gap-2">
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
 					<div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-2">
-						<div className="h-max row-span-2 rounded-4xl bg-mauve-400/30 text-mauve-500 p-2">
+						<div className="h-max row-span-2 rounded-4xl bg-foreground/30 text-foreground p-2">
 							<Logs size={18} />
 						</div>
 						<div className="text-sm">Total words</div>
@@ -29,7 +30,7 @@ const page = async () => {
 				</div>
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
 					<div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-2">
-						<div className="h-max row-span-2 rounded-4xl bg-emerald-400/30 text-emerald-500 p-2">
+						<div className="h-max row-span-2 rounded-4xl bg-success/30 text-success p-2">
 							<ChartSpline size={18} />
 						</div>
 						<div className="text-sm">Avg success</div>
@@ -56,7 +57,7 @@ const page = async () => {
 				</div>
 			</div>
 			<div className="w-full flex flex-col gap-2">
-				<div className="text-lg font-bold">Активность</div>
+				<div className="text-lg font-bold">Activity</div>
 				<div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2 p-3 rounded-xl border border-foreground">
 					<div className="h-max row-span-2 rounded-xl bg-accent/30 text-accent p-2">
 						<Flame size={20} />
@@ -64,6 +65,10 @@ const page = async () => {
 					<div>Сегодня</div>
 					<div className="font-bold">12 слов</div>
 				</div>
+			</div>
+			<div className="w-full flex flex-col gap-2">
+				<div className="text-lg font-bold">Cards week progress</div>
+				<Chart />
 			</div>
 		</div>
 	);

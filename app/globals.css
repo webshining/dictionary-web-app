@@ -4,6 +4,7 @@
   --color-background: #f5e9dd;
   --color-foreground: #494949;
   --color-accent: #e85d56;
+  --color-success: #33be56;
 }
 
 *::-webkit-scrollbar {
@@ -12,6 +13,7 @@
 
 * {
   user-select: none;
+  outline: none;
 }
 
 .glass {

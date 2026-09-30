@@ -11,8 +11,8 @@ const Providers = ({ authorized, children }: { authorized: boolean; children: Re
 	useEffect(() => {
 		const user = window.Telegram.WebApp.initDataUnsafe.user;
 		if (!user) return;
-		validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
-	}, []);
+		if (!authorized) validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
+	}, [authorized]);
 
 	useEffect(() => {
 		if (["android", "ios"].includes(window.Telegram.WebApp.platform)) window.Telegram.WebApp.requestFullscreen();
