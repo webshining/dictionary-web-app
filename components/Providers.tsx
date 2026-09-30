@@ -14,6 +14,10 @@ const Providers = ({ authorized, children }: { authorized: boolean; children: Re
 		validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
 	}, []);
 
+	useEffect(() => {
+		if (["android", "ios"].includes(window.Telegram.WebApp.platform)) window.Telegram.WebApp.requestFullscreen();
+	}, []);
+
 	return validated ? <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> : null;
 };
 

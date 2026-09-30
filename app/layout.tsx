@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					</filter>
 				</svg>
 				<ServerProviders>
-					<main className="relative w-full h-full flex flex-col overflow-y-auto">
+					<main className="relative w-full h-full flex flex-col overflow-y-auto pt-[var(--tg-content-safe-area-inset-top)]">
 						<div className="flex-1">{children}</div>
 						<NavBar />
 					</main>

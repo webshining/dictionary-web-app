@@ -13,7 +13,6 @@
     "@grpc/grpc-js": "^1.14.4",
     "@tanstack/react-query": "^5.100.14",
     "@toolwind/corner-shape": "0.0.8-3",
-    "@types/telegram-web-app": "^9.6.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
     "jsonwebtoken": "^9.0.3",
@@ -32,6 +31,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@types/telegram-web-app": "^10.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/leaflet": "^1.9.21",
