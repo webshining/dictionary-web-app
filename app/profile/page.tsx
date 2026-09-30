@@ -1,15 +1,21 @@
-"use client";
+import { Stats } from "@/types/stats";
 import { ChartSpline, Flame, Logs, Metronome, Stone } from "lucide-react";
-import Image from "next/image";
+import { cookies } from "next/headers";
+import ProfilePicture from "./ProfilePicture";
 
-const page = () => {
+const page = async () => {
+	const cookiesStore = await cookies();
+	const session = cookiesStore.get("session");
+	const response = await fetch(`${process.env.API_URL}/me/stats`, {
+		headers: { Authorization: `Bearer ${session!.value}` },
+	});
+	const stats = Stats.parse(await response.json());
+
 	return (
 		<div className="w-full h-full flex flex-col items-center p-4 gap-4">
 			<div className="w-full flex justify-between items-center">
 				<div className="text-xl font-semibold">Статистика</div>
-				<div className="relative w-10 aspect-square rounded-4xl overflow-hidden">
-					<Image src="/station.png" alt="" fill unoptimized loading="eager" />
-				</div>
+				<ProfilePicture />
 			</div>
 			<div className="w-full grid grid-cols-2 grid-rows-2 gap-2">
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
@@ -17,8 +23,8 @@ const page = () => {
 						<div className="h-max row-span-2 rounded-4xl bg-mauve-400/30 text-mauve-500 p-2">
 							<Logs size={18} />
 						</div>
-						<div className="text-sm">Всего слов</div>
-						<div className="text-sm">128</div>
+						<div className="text-sm">Total words</div>
+						<div className="text-sm">{stats.words_count}</div>
 					</div>
 				</div>
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
@@ -26,8 +32,8 @@ const page = () => {
 						<div className="h-max row-span-2 rounded-4xl bg-emerald-400/30 text-emerald-500 p-2">
 							<ChartSpline size={18} />
 						</div>
-						<div className="text-sm">Средний стрик</div>
-						<div className="text-sm">12</div>
+						<div className="text-sm">Avg success</div>
+						<div className="text-sm">{stats.avg_streak}</div>
 					</div>
 				</div>
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
@@ -35,8 +41,8 @@ const page = () => {
 						<div className="h-max row-span-2 rounded-4xl bg-amber-400/30 text-amber-500 p-2">
 							<Metronome size={18} />
 						</div>
-						<div className="text-sm">На повторении</div>
-						<div className="text-sm">15</div>
+						<div className="text-sm">On repeat</div>
+						<div className="text-sm">{stats.due_words_count}</div>
 					</div>
 				</div>
 				<div className="flex gap-2 p-2 rounded-xl border border-foreground">
@@ -44,8 +50,8 @@ const page = () => {
 						<div className="h-max row-span-2 rounded-4xl bg-accent/30 text-accent p-2">
 							<Stone size={18} />
 						</div>
-						<div className="text-sm">Сложные</div>
-						<div className="text-sm">6</div>
+						<div className="text-sm">Difficult words</div>
+						<div className="text-sm">{stats.difficult_words_count}</div>
 					</div>
 				</div>
 			</div>
