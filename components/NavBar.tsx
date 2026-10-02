@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { BrainCircuit, User, WholeWord } from "lucide-react";
+import { BrainCircuit, Turntable, User, WholeWord } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memo } from "react";
@@ -42,6 +42,22 @@ const NavBar = () => {
 								className="transition-all duration-300 ease-in-out"
 								size={22}
 								strokeWidth={pathname.startsWith("/cards") ? 3 : 1}
+							/>
+						</Link>
+					</li>
+					<li>
+						<Link
+							href="/music"
+							className={clsx(
+								"flex flex-col items-center rounded-xl px-3 py-1 text-sm transition-all duration-300 ease-in-out",
+								pathname.startsWith("/music") && "text-accent",
+							)}
+							prefetch
+						>
+							<Turntable
+								className="transition-all duration-300 ease-in-out"
+								size={22}
+								strokeWidth={pathname.startsWith("/music") ? 3 : 1}
 							/>
 						</Link>
 					</li>
