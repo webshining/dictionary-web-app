@@ -30,7 +30,6 @@ const page = () => {
 		const init = async () => {
 			await spotifySdk.current.authenticate();
 			const accessToken = await spotifySdk.current.getAccessToken();
-			console.log(accessToken);
 			if (accessToken) window.Telegram.WebApp.CloudStorage.setItem("spotify", JSON.stringify(accessToken));
 			polling = setInterval(async () => {
 				try {

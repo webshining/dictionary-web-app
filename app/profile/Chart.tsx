@@ -1,21 +1,10 @@
 "use client";
+import type { DayStatsType } from "@/types/stats";
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 
-const Chart = () => {
+const Chart = ({ data }: { data: DayStatsType[] }) => {
 	return (
-		<AreaChart
-			style={{ width: "100%", aspectRatio: 1.618 }}
-			data={[
-				{ name: "SU", total: 12, success: 1, failure: 11 },
-				{ name: "MO", total: 15, success: 8, failure: 7 },
-				{ name: "TU", total: 12, success: 3, failure: 9 },
-				{ name: "WE", total: 2, success: 2, failure: 0 },
-				{ name: "TH", total: 11, success: 10, failure: 1 },
-				{ name: "FR", total: 7, success: 4, failure: 3 },
-				{ name: "SA", total: 15, success: 10, failure: 5 },
-			]}
-			responsive
-		>
+		<AreaChart style={{ width: "100%", aspectRatio: 1.618 }} data={data} responsive>
 			<defs>
 				<linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
 					<stop offset="0%" stopColor="var(--color-foreground)" stopOpacity={1} />
@@ -33,7 +22,7 @@ const Chart = () => {
 
 			<CartesianGrid />
 
-			<XAxis dataKey="name" height="auto" tick={{ fontSize: 12 }} />
+			<XAxis dataKey="date" height="auto" tick={{ fontSize: 12 }} />
 			<YAxis width="auto" tick={{ fontSize: 12 }} />
 
 			<Area

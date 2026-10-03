@@ -15,7 +15,7 @@ const page = async () => {
 	return (
 		<div className="w-full h-full flex flex-col items-center p-4 gap-4">
 			<div className="w-full flex justify-between items-center">
-				<div className="text-xl font-semibold">Статистика</div>
+				<div className="text-xl font-semibold">Statistics</div>
 				<ProfilePicture />
 			</div>
 			<div className="w-full grid grid-cols-2 grid-rows-2 gap-2">
@@ -68,7 +68,7 @@ const page = async () => {
 			</div>
 			<div className="w-full flex flex-col gap-2">
 				<div className="text-lg font-bold">Cards week progress</div>
-				<Chart />
+				<Chart data={stats.week} />
 			</div>
 		</div>
 	);
