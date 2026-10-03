@@ -24,17 +24,22 @@ const page = () => {
 	);
 
 	useEffect(() => {
-		spotifySdk.current.authenticate();
+		let polling: NodeJS.Timeout | undefined;
 
-		const polling = setInterval(async () => {
-			try {
-				const state = await spotifySdk.current.player.getPlaybackState();
-				setCurrentPlayer(state);
-			} catch (error) {
-				setCurrentPlayer(null);
-				console.error("Failed to get playback state:", error);
-			}
-		}, 2000);
+		const init = async () => {
+			await spotifySdk.current.authenticate();
+			polling = setInterval(async () => {
+				try {
+					const state = await spotifySdk.current.player.getPlaybackState();
+					setCurrentPlayer(state);
+				} catch (error) {
+					setCurrentPlayer(null);
+					console.error("Failed to get playback state:", error);
+				}
+			}, 2000);
+		};
+
+		init();
 
 		return () => {
 			clearInterval(polling);
@@ -42,17 +47,20 @@ const page = () => {
 	}, []);
 
 	useEffect(() => {
-		if (!currentPlayer) return;
+		if (!currentPlayer) {
+			setLyrics([{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
+			return;
+		}
 		startTimestamp.current = Date.now() - currentPlayer.progress_ms;
 
 		if (currentPlayer.item.id !== prevPlayer.current?.item.id) {
 			if ("artists" in currentPlayer.item) {
 				const artistName = currentPlayer.item.artists[0]?.name || "";
 				searchLyrics(currentPlayer.item.name, artistName).then((data) => {
-					setLyrics(data);
+					setLyrics(data.length > 0 ? data : [{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
 				});
 			} else {
-				setLyrics([]);
+				setLyrics([{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
 			}
 		}
 		prevPlayer.current = currentPlayer;
@@ -71,7 +79,10 @@ const page = () => {
 	}, [currentPlayer, cover]);
 
 	useEffect(() => {
-		if (!lyrics) return;
+		if (!lyrics) {
+			setCurrentLine(undefined);
+			return;
+		}
 
 		const ticker = setInterval(() => {
 			const position = Date.now() - startTimestamp.current;
@@ -90,7 +101,7 @@ const page = () => {
 		<div className="w-full h-full flex flex-col items-center justify-center gap-2 text-center p-4 text-2xl font-bold">
 			{cover && (
 				<div className="absolute left-0 top-0 w-full h-full -z-1">
-					<Image src={cover} alt="" fill unoptimized loading="eager" objectFit="cover" />
+					<Image src={cover} alt="" fill unoptimized loading="eager" style={{ objectFit: "cover" }} />
 					<div className="absolute w-full h-full left-0 top-o bg-background/75 backdrop-blur-xl" />
 				</div>
 			)}

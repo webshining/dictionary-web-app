@@ -18,6 +18,7 @@ export const Lyrics = z
 		return lyrics.find((l) => l.syncedLyrics)?.syncedLyrics || lyrics.find((l) => l.plainLyrics)?.plainLyrics || "";
 	})
 	.transform((lyrics) => {
+		if (!lyrics) return [];
 		return lyrics.split("\n").map((line) => {
 			const match = line.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);
 			if (!match) return { timecode: null, text: line };
