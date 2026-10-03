@@ -14,6 +14,7 @@ const page = () => {
 	const startTimestamp = useRef<number>(Date.now());
 	const prevLine = useRef<string | undefined>(undefined);
 	const [currentLine, setCurrentLine] = useState<LyricsLine | undefined>();
+	const isPaused = useRef(false);
 
 	const spotifySdk = useRef(
 		SpotifyApi.withUserAuthorization(
@@ -32,8 +33,11 @@ const page = () => {
 				try {
 					const state = await spotifySdk.current.player.getPlaybackState();
 					setCurrentPlayer(state);
+					isPaused.current = !state.is_playing;
+					startTimestamp.current = Date.now() - state.progress_ms;
 				} catch (error) {
 					setCurrentPlayer(null);
+					isPaused.current = false;
 					console.error("Failed to get playback state:", error);
 				}
 			}, 2000);
@@ -48,10 +52,9 @@ const page = () => {
 
 	useEffect(() => {
 		if (!currentPlayer) {
-			setLyrics([{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
+			setLyrics([]);
 			return;
 		}
-		startTimestamp.current = Date.now() - currentPlayer.progress_ms;
 
 		if (currentPlayer.item.id !== prevPlayer.current?.item.id) {
 			if ("artists" in currentPlayer.item) {
@@ -85,6 +88,7 @@ const page = () => {
 		}
 
 		const ticker = setInterval(() => {
+			if (isPaused.current) return;
 			const position = Date.now() - startTimestamp.current;
 			const candidate = lyrics.findLast((l) => l.timecode && l.timecode * 1000 <= position);
 			if (prevLine.current === candidate?.id) return;

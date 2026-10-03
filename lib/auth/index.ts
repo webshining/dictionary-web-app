@@ -28,7 +28,7 @@ export async function validate(data: string): Promise<boolean> {
 
 	const token = jwt.sign({ sub: user_id }, process.env.BOT_TOKEN!, { algorithm: "HS256" });
 	const cookiesStore = await cookies();
-	await cookiesStore.set("session", token, { httpOnly: true, sameSite: "lax", maxAge: 3600 * 24 });
+	await cookiesStore.set("session", token, { httpOnly: true, sameSite: "lax" });
 
 	return true;
 }
