@@ -14,6 +14,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		<html lang="en" className={`${nunito.className} antialiased`} suppressHydrationWarning>
 			<body className="w-dvw h-dvh overflow-hidden bg-background text-foreground">
 				<Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+				<Script strategy="beforeInteractive">
+					{`
+						window.Telegram.WebApp.CloudStorage.getItem("spotify", (_e, i) => {
+							localStorage.setItem("spotify-sdk:AuthorizationCodeWithPKCEStrategy:token", i);
+						});
+					`}
+				</Script>
 				<svg style={{ display: "none" }} aria-hidden={true}>
 					<filter id="displacementFilter">
 						<feImage

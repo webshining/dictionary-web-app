@@ -28,10 +28,13 @@ const page = () => {
 		let polling: NodeJS.Timeout | undefined;
 
 		const init = async () => {
+			const accessToken = await spotifySdk.current.getAccessToken();
+			if (accessToken) window.Telegram.WebApp.CloudStorage.setItem("spotify", JSON.stringify(accessToken));
 			await spotifySdk.current.authenticate();
 			polling = setInterval(async () => {
 				try {
 					const state = await spotifySdk.current.player.getPlaybackState();
+					if (!state) return;
 					setCurrentPlayer(state);
 					isPaused.current = !state.is_playing;
 					startTimestamp.current = Date.now() - state.progress_ms;

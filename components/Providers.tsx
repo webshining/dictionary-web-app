@@ -5,14 +5,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
-const Providers = ({ authorized, children }: { authorized: boolean; children: React.ReactNode }) => {
-	const [validated, setValidated] = useState(authorized);
+const Providers = ({ children }: { children: React.ReactNode }) => {
+	const [validated, setValidated] = useState(false);
 
 	useEffect(() => {
 		const user = window.Telegram.WebApp.initDataUnsafe.user;
 		if (!user) return;
-		if (!authorized) validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
-	}, [authorized]);
+		validate(window.Telegram.WebApp.initData).then((v) => setValidated(v));
+	}, []);
 
 	useEffect(() => {
 		if (["android", "ios"].includes(window.Telegram.WebApp.platform)) window.Telegram.WebApp.requestFullscreen();

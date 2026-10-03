@@ -1,7 +1,7 @@
 "use server";
 
 import crypto from "crypto";
-import jwt from "jsonwebtoken";
+import { type JWTPayload, jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 
 export async function validate(data: string): Promise<boolean> {
@@ -26,9 +26,10 @@ export async function validate(data: string): Promise<boolean> {
 
 	const user_id = String(JSON.parse(user)["id"]);
 
-	const token = jwt.sign({ sub: user_id }, process.env.BOT_TOKEN!, { algorithm: "HS256" });
-	const cookiesStore = await cookies();
-	await cookiesStore.set("session", token, { httpOnly: true, sameSite: "lax" });
+	const secret = new TextEncoder().encode(process.env.BOT_TOKEN!);
+	const token = await new SignJWT({ sub: user_id }).setProtectedHeader({ alg: "HS256" }).sign(secret);
+	const { set } = await cookies();
+	await set("session", token, { httpOnly: true, sameSite: "lax" });
 
 	return true;
 }
@@ -37,19 +38,16 @@ export async function checkAuthorized(): Promise<boolean> {
 	return (await verify()) !== null;
 }
 
-export async function verify(): Promise<UserPayload | null> {
+export async function verify(): Promise<JWTPayload | null> {
 	const cookiesStore = await cookies();
 	const session = cookiesStore.get("session");
 	if (!session) return null;
 
+	const secret = new TextEncoder().encode(process.env.BOT_TOKEN!);
 	try {
-		const decoded = jwt.verify(session.value, process.env.BOT_TOKEN!, { algorithms: ["HS256"] }) as UserPayload;
-		return decoded;
+		const { payload } = await jwtVerify(session.value, secret);
+		return payload;
 	} catch {
 		return null;
 	}
-}
-
-interface UserPayload extends jwt.JwtPayload {
-	sub: string;
 }
