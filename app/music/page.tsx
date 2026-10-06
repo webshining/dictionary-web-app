@@ -129,10 +129,12 @@ const page = () => {
 			)}
 			{currentLine && (
 				<div>
-					{currentLine.text.split(" ").map((w, i) => {
+					{currentLine.text.match(/[\p{L}]+(?:[-'’][\p{L}]+)*|[^\p{L}]/gu)?.map((w, i) => {
+						const isWord = /^\p{L}+(?:[-'’]\p{L}+)*$/u.test(w);
+
 						return (
 							<span key={`${currentLine.id}:${i}`}>
-								{w.match(/(\p{L}+(?:[-'’]\p{L}+)*)/gu) ? (
+								{isWord ? (
 									<button
 										type="button"
 										className="cursor-pointer transition-all duration-300 ease-in-out rounded-xl p-1 px-2 hover:bg-background"
@@ -142,7 +144,7 @@ const page = () => {
 									</button>
 								) : (
 									w
-								)}{" "}
+								)}
 							</span>
 						);
 					})}
