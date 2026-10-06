@@ -1,6 +1,6 @@
 "use server";
 
-import { Word, Words } from "@/types/word";
+import { Know, Word, Words } from "@/types/word";
 import { cookies } from "next/headers";
 
 export const getMyWords = async () => {
@@ -32,4 +32,16 @@ export const getMyRandomWord = async () => {
 		headers: { Authorization: `Bearer ${session.value}` },
 	});
 	return response.status === 200 ? Word.parse(await response.json()) : null;
+};
+export const translateWord = async (text: string) => {
+	const cookiesStore = await cookies();
+	const session = cookiesStore.get("session");
+	if (!session) return null;
+
+	const response = await fetch(`${process.env.API_URL}/me/words`, {
+		method: "POST",
+		body: JSON.stringify({ text }),
+		headers: { Authorization: `Bearer ${session.value}`, "Content-Type": "application/json" },
+	});
+	return response.status === 200 ? Know.parse(await response.json()) : null;
 };

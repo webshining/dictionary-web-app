@@ -1,5 +1,6 @@
 "use client";
 import { searchLyrics } from "@/lib/lyrics";
+import { translateWord } from "@/lib/words";
 import type { LyricsLine } from "@/types/lyrics";
 import { type PlaybackState, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import Image from "next/image";
@@ -12,7 +13,7 @@ const page = () => {
 
 	const [lyrics, setLyrics] = useState<LyricsLine[]>([]);
 	const startTimestamp = useRef<number>(Date.now());
-	const prevLine = useRef<string | undefined>(undefined);
+	const prevLine = useRef<LyricsLine | undefined>(undefined);
 	const [currentLine, setCurrentLine] = useState<LyricsLine | undefined>();
 	const isPaused = useRef(false);
 
@@ -26,29 +27,38 @@ const page = () => {
 
 	useEffect(() => {
 		let polling: NodeJS.Timeout | undefined;
+		let cancelled = false;
+
+		const updatePlayback = async () => {
+			try {
+				const state = await spotifySdk.current.player.getPlaybackState();
+
+				if (cancelled || !state) return;
+
+				setCurrentPlayer(state);
+				isPaused.current = !state.is_playing;
+				startTimestamp.current = Date.now() - state.progress_ms;
+			} catch (error) {
+				if (cancelled) return;
+
+				setCurrentPlayer(null);
+				isPaused.current = false;
+				console.error("Failed to get playback state:", error);
+			}
+		};
 
 		const init = async () => {
 			await spotifySdk.current.authenticate();
 			const accessToken = await spotifySdk.current.getAccessToken();
 			if (accessToken) window.Telegram.WebApp.CloudStorage.setItem("spotify", JSON.stringify(accessToken));
-			polling = setInterval(async () => {
-				try {
-					const state = await spotifySdk.current.player.getPlaybackState();
-					if (!state) return;
-					setCurrentPlayer(state);
-					isPaused.current = !state.is_playing;
-					startTimestamp.current = Date.now() - state.progress_ms;
-				} catch (error) {
-					setCurrentPlayer(null);
-					isPaused.current = false;
-					console.error("Failed to get playback state:", error);
-				}
-			}, 2000);
+			await updatePlayback();
+			polling = setInterval(updatePlayback, 2000);
 		};
 
 		init();
 
 		return () => {
+			cancelled = true;
 			clearInterval(polling);
 		};
 	}, []);
@@ -60,13 +70,18 @@ const page = () => {
 		}
 
 		if (currentPlayer.item.id !== prevPlayer.current?.item.id) {
+			setCurrentLine(undefined);
 			if ("artists" in currentPlayer.item) {
 				const artistName = currentPlayer.item.artists[0]?.name || "";
 				searchLyrics(currentPlayer.item.name, artistName).then((data) => {
-					setLyrics(data.length > 0 ? data : [{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
+					setLyrics(
+						data.length > 0
+							? data
+							: [{ id: "null", text: "Song lyrics not found.", timecode: 1, hash: "" }],
+					);
 				});
 			} else {
-				setLyrics([{ id: "null", text: "Song lyrics not found.", timecode: 1 }]);
+				setLyrics([{ id: "null", text: "Song lyrics not found.", timecode: 1, hash: "" }]);
 			}
 		}
 		prevPlayer.current = currentPlayer;
@@ -95,8 +110,8 @@ const page = () => {
 			const position = Date.now() - startTimestamp.current;
 			const candidate = lyrics.findLast((l) => l.timecode && l.timecode * 1000 <= position);
 			if (prevLine.current === candidate?.id) return;
-			setCurrentLine(candidate);
-			prevLine.current = candidate?.id;
+			if (candidate && candidate.text && candidate.hash !== prevLine.current?.hash) setCurrentLine(candidate);
+			prevLine.current = candidate;
 		}, 50);
 
 		return () => {
@@ -112,7 +127,27 @@ const page = () => {
 					<div className="absolute w-full h-full left-0 top-o bg-background/75 backdrop-blur-xl" />
 				</div>
 			)}
-			{currentLine && <div>{currentLine.text}</div>}
+			{currentLine && (
+				<div>
+					{currentLine.text.split(" ").map((w, i) => {
+						return (
+							<span key={`${currentLine.id}:${i}`}>
+								{w.match(/(\p{L}+(?:[-'’]\p{L}+)*)/gu) ? (
+									<button
+										type="button"
+										className="cursor-pointer transition-all duration-300 ease-in-out rounded-xl p-1 px-2 hover:bg-background"
+										onClick={() => translateWord(w)}
+									>
+										{w}
+									</button>
+								) : (
+									w
+								)}{" "}
+							</span>
+						);
+					})}
+				</div>
+			)}
 		</div>
 	);
 };
